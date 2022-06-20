@@ -175,10 +175,11 @@ public abstract class AbstractApi {
      * @return request entity
      */
     protected RequestEntity<?> Post(URI uri, Object params, HttpHeaders httpHeaders) {
+        RequestEntity.BodyBuilder header = RequestEntity.post(uri)
+                .header("Pay-TenantId", tenantId);
+        httpHeaders.forEach((k, v) -> header.header(k, v.toArray(new String[0])));
         try {
-            return RequestEntity.post(uri)
-                    .header("Pay-TenantId", tenantId)
-                    .headers(httpHeaders)
+            return header
                     .body(mapper.writeValueAsString(params));
         } catch (JsonProcessingException e) {
             throw new PayException("wechat app pay json failed");
@@ -205,9 +206,10 @@ public abstract class AbstractApi {
      * @return the request entity
      */
     protected RequestEntity<?> Get(URI uri, HttpHeaders httpHeaders) {
-        return RequestEntity.get(uri)
-                .header("Pay-TenantId", tenantId)
-                .headers(httpHeaders)
+        RequestEntity.BodyBuilder header = RequestEntity.post(uri)
+                .header("Pay-TenantId", tenantId);
+        httpHeaders.forEach((k, v) -> header.header(k, v.toArray(new String[0])));
+        return header
                 .build();
     }
 
@@ -237,10 +239,11 @@ public abstract class AbstractApi {
      * @return the request entity
      */
     protected RequestEntity<?> Patch(URI uri, Object params, HttpHeaders httpHeaders) {
+        RequestEntity.BodyBuilder header = RequestEntity.patch(uri)
+                .header("Pay-TenantId", tenantId);
+        httpHeaders.forEach((k, v) -> header.header(k, v.toArray(new String[0])));
         try {
-            return RequestEntity.patch(uri)
-                    .header("Pay-TenantId", tenantId)
-                    .headers(httpHeaders)
+            return header
                     .body(mapper.writeValueAsString(params));
         } catch (JsonProcessingException e) {
             throw new PayException("wechat app pay json failed");
@@ -379,7 +382,11 @@ public abstract class AbstractApi {
         ResponseEntity<Resource> responseEntity = this.billResource(downloadUrl);
         HttpHeaders httpHeaders = new HttpHeaders();
         // utf is not support
-        httpHeaders.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
+
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                .filename(filename)
+                .build();
+        httpHeaders.setContentDisposition(contentDisposition);
         return ResponseEntity.ok().headers(httpHeaders).body(responseEntity.getBody());
     }
 

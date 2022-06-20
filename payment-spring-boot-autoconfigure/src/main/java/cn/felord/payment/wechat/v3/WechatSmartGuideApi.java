@@ -158,7 +158,10 @@ public class WechatSmartGuideApi extends AbstractApi {
                             .queryParams(queryParams)
                             .build()
                             .toUri();
-                    return RequestEntity.get(uri).headers(httpHeaders)
+                    RequestEntity.HeadersBuilder<?> header = RequestEntity.get(uri)
+                            .header("Pay-TenantId", tenantId());
+                    httpHeaders.forEach((k,v)-> header.header(k,v.toArray(new String[0])));
+                    return header
                             .build();
                 })
                 .consumer(wechatResponseEntity::convert)

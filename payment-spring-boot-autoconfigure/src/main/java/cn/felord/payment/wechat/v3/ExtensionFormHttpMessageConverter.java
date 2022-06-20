@@ -158,7 +158,7 @@ final class ExtensionFormHttpMessageConverter extends FormHttpMessageConverter {
             throws IOException, HttpMessageNotWritableException {
 
         if (!isMultipart(map, contentType)) {
-            writeForm((MultiValueMap<String, Object>) map, contentType, outputMessage);
+            writeForm((MultiValueMap<String, String>) map, contentType, outputMessage);
         } else {
             writeMultipart((MultiValueMap<String, Object>) map, outputMessage);
         }
@@ -193,7 +193,7 @@ final class ExtensionFormHttpMessageConverter extends FormHttpMessageConverter {
      * @param outputMessage the output message
      * @throws IOException the io exception
      */
-    private void writeForm(MultiValueMap<String, Object> formData, @Nullable MediaType contentType,
+    private void writeForm(MultiValueMap<String, String> formData, @Nullable MediaType contentType,
                            HttpOutputMessage outputMessage) throws IOException {
 
         contentType = getMediaType(contentType);

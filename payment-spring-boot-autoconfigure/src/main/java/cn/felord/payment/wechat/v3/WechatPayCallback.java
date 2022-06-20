@@ -49,6 +49,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -475,7 +476,7 @@ public class WechatPayCallback {
      * @throws JsonProcessingException the json processing exception
      * @since 1.0.2.RELEASE
      */
-    private CallbackParams resolve(ResponseSignVerifyParams params) throws JsonProcessingException {
+    private CallbackParams resolve(ResponseSignVerifyParams params) throws IOException {
         if (signatureProvider.responseSignVerify(params)) {
             return MAPPER.readValue(params.getBody(), CallbackParams.class);
         }
